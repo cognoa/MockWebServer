@@ -246,7 +246,7 @@ void sigpipe_handler(int sig)
         NSString *codeString = [NSString stringWithFormat:@"HTTP/1.1 %d", code];
         data = [[NSMutableString alloc] initWithString:codeString];
     } else {
-        NSMutableString *data = [[NSMutableString alloc] initWithUTF8String:Response404];
+        data = [[NSMutableString alloc] initWithUTF8String:Response404];
     }
 
     for (NSString *k in resHeaders.allKeys) {
