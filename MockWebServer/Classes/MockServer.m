@@ -239,11 +239,12 @@ void sigpipe_handler(int sig)
 	}
 }
 
-- (NSData*)constructHeader:(NSDictionary*)resHeaders
+- (NSData*)constructHeader:(NSDictionary*)resHeaders withCode:(int)code
 {
     NSMutableString *data;
-    if (self.dispatch.code) {
-        data = [NSString stringWithFormat:@"HTTP/1.1 %d", self.dispatch.code];
+    if (code) {
+        NSString *codeString = [NSString stringWithFormat:@"HTTP/1.1 %d", code];
+        data = [[NSMutableString alloc] initWithString:codeString];
     } else {
         NSMutableString *data = [[NSMutableString alloc] initWithUTF8String:Response200];
     }
@@ -321,10 +322,10 @@ void sigpipe_handler(int sig)
         /**
          construct header based on user's template.
          */
-        NSLog([NSString stringWithFormat: @"Dispatch Code: %d", self.dispatch.code]);
+//        NSLog([NSString stringWithFormat: @"Dispatch Code: %d", self.dispatch.code]);
         if (self.dispatch != nil) {
             TRACE("Found matching request.");
-            header = [self constructHeader:self.dispatch.responseField];
+            header = [self constructHeader:self.dispatch.responseField withCode:self.dispatch.code];
             body = [self.dispatch.responseString dataUsingEncoding:NSUTF8StringEncoding];
         }
         else if (isRequestValid == YES) {
