@@ -241,7 +241,13 @@ void sigpipe_handler(int sig)
 
 - (NSData*)constructHeader:(NSDictionary*)resHeaders
 {
-    NSMutableString *data = [[NSMutableString alloc] initWithUTF8String:Response200];
+    NSMutableString *data;
+    if (self.dispatch.code) {
+        data = [NSString stringWithFormat:@"HTTP/1.1 %d", self.dispatch.code];
+    } else {
+        NSMutableString *data = [[NSMutableString alloc] initWithUTF8String:Response200];
+    }
+
     for (NSString *k in resHeaders.allKeys) {
         NSString *v = [resHeaders objectForKey:k];
         
@@ -315,6 +321,7 @@ void sigpipe_handler(int sig)
         /**
          construct header based on user's template.
          */
+        NSLog([NSString stringWithFormat: @"Dispatch Code: %d", self.dispatch.code]);
         if (self.dispatch != nil) {
             TRACE("Found matching request.");
             header = [self constructHeader:self.dispatch.responseField];
